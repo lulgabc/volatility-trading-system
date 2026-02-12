@@ -1,106 +1,101 @@
-# 📈 波动率交易系统
+# 📈 Volatility Trading System
 
-自动化波动率交易策略系统，连接 Interactive Brokers 进行股票交易。
+Automated volatility trading system with IBKR integration and Telegram notifications.
 
-## 🏗️ 系统架构
+## 🏗️ System Architecture
 
 ```
 volatility_trading_system/
-├── 📁 strategy/              # 1. 交易策略
-│   └── volatility_strategy.py
-├── 📁 screener/             # 2. 股票扫描器
-│   └── stock_screener.py
-├── 📁 executor/              # 3. 交易执行
-│   └── trading_executor.py
-├── 📁 data/                  # 数据存储
-├── main.py                   # 主程序
-└── config.json               # 配置文件
+├── ibkr_trader_v3.py           # Main trading system
+├── multi_strategy_v2.py         # 6-strategy voting system
+├── intraday_v2.py              # Adaptive intraday trading
+├── realtime_trader.py           # Real-time market scanner (268 stocks)
+├── market_hours_trader.py      # Auto-start/stop during US market
+├── health_check.py              # Health monitoring
+├── trading_dashboard.py         # Web monitoring dashboard
+├── mobile_report.py             # Mobile-optimized Telegram reports
+└── quick_setup.bat             # Scheduled task setup
 ```
 
-## 🎯 功能特性
+## 🎯 Features
 
-### 1. 交易策略 (Strategy)
-- **IV Rank 策略**: 基于隐含波动率历史排名
-- **VIX 均值回归**: VIX极端值时反向交易
-- **IV/HV 偏离**: 隐含波动率 vs 实际波动率
-- **波动率逆向**: 综合多指标信号
+### Strategies (6-Strategy Voting System)
+- **IV Rank Strategy**: Based on implied volatility historical ranking
+- **VIX Mean Reversion**: Counter-trend at VIX extremes
+- **IV/HV Spread Strategy**: Implied vs historical volatility deviation
+- **Momentum Strategy**: Trend-following signals
+- **Contrarian Strategy**: Opposite of market direction
+- **Trend Strategy**: Moving average based
 
-### 2. 股票扫描器 (Screener)
-- 自动扫描美国市场
-- 筛选高期权活跃度股票
-- IV Rank + IV/HV 偏离度评分
-- 按交易价值排序
+### Auto-Trading
+- **Market Hours**: 9:30 AM - 4:00 PM ET (3:30 PM - 10:00 PM Paris)
+- **Auto-Start**: Launches at market open
+- **Auto-Stop**: Closes at market close
+- **Auto-Restart**: Recovers from crashes during trading hours
 
-### 3. 交易执行 (Executor)
-- **Paper模式**: 模拟交易（无需IBKR）
-- **Live模式**: 实盘交易（需IBKR连接）
-- 订单管理：市价/限价/止损单
-- 持仓监控与风险控制
+### Notifications
+- Telegram bot: @Lulg_trading_bot
+- Start/Stop notifications
+- Error alerts
+- Daily reports
 
-## 🚀 快速开始
+## 🚀 Quick Start
 
-### 前置条件
+### Prerequisites
 - Python 3.12+
-- IBKR 账户（Paper 或实盘）
+- IBKR Account (Paper or Live)
+- Telegram Bot Token
 
-### 安装依赖
+### Install Dependencies
 ```bash
-pip install ib_insync pandas numpy scipy matplotlib
+pip install ib_insync pandas numpy requests scipy
 ```
 
-### 配置
-编辑 `config.json`:
+### Configuration
+Edit `config.json`:
 ```json
 {
-    "mode": "paper",        // paper 或 live
+    "mode": "paper",
     "initial_capital": 1000000,
-    "symbols": ["AAPL", "MSFT", ...]
+    "symbols": ["AAPL", "MSFT", "GOOGL", ...]
 }
 ```
 
-### 运行
+### Run
 
-**模拟交易:**
+**Auto-Trading (Recommended):**
 ```bash
-python main.py --mode paper
+python market_hours_trader.py --loop
 ```
 
-**实盘交易:**
+**Manual Trading:**
 ```bash
-# 先启动IBKR Gateway/TWS
-python main.py --mode live
+python realtime_trader.py
 ```
 
-## 📊 策略说明
+## 📊 Strategy Weights
 
-### IV Rank 策略
-- IV Rank > 70% → **做空波动率**（期权贵）
-- IV Rank < 30% → **做多波动率**（期权便宜）
+| Strategy | Weight |
+|----------|--------|
+| IV Rank | 1.0 |
+| VIX Mean Reversion | 0.8 |
+| IV/HV Spread | 0.7 |
+| Momentum | 0.6 |
+| Contrarian | 0.5 |
+| Trend | 0.5 |
 
-### VIX 策略
-- VIX > 20 → 做多波动率（恐慌买入）
-- VIX < 12 → 做空波动率（平静卖出）
+## ⚠️ Risk Warning
 
-## ⚠️ 风险提示
+1. **For educational purposes only** - not investment advice
+2. **Paper trading recommended** before live trading
+3. Implement proper risk management
+4. Monitor system performance
 
-1. **仅供学习研究**，不构成投资建议
-2. **实盘交易有亏损风险**
-3. 建议先用 Paper 模式充分测试
-4. 注意仓位管理和止损
-
-## 📝 TODO
-
-- [ ] 集成真实市场数据API
-- [ ] 添加机器学习预测模型
-- [ ] 增加仓位优化算法
-- [ ] 支持期货/期权交易
-- [ ] 添加回测模块
-
-## 📄 许可证
+## 📄 License
 
 MIT License
 
 ---
 
-**作者**: AI Trading System  
-**日期**: 2026-02-10
+**Author**: grandmacro  
+**Date**: 2026-02-12
