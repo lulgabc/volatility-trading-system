@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volatility Trading System Documentation</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0d0d0d 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .container { max-width: 1000px; margin: 0 auto; }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+        }
+        .header h1 { font-size: 32px; margin-bottom: 10px; }
+        .header .version { 
+            background: rgba(255,255,255,0.2); 
+            padding: 5px 15px; 
+            border-radius: 20px; 
+            font-size: 14px;
+        }
+        
+        /* Navigation */
+        .nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        .nav a {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .nav a:hover {
+            background: rgba(102, 126, 234, 0.3);
+            border-color: #667eea;
+        }
+        
+        /* Sections */
+        .section {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .section h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section h3 {
+            font-size: 18px;
+            margin: 20px 0 15px;
+            color: #00d4ff;
+        }
+        
+        /* Strategy Cards */
+        .strategy-card {
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+        .strategy-card.highlight {
+            border-left-color: #00ff88;
+            background: rgba(0,255,136,0.05);
+        }
+        .strategy-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .strategy-name { font-weight: bold; font-size: 18px; }
+        .strategy-weight {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 8px;
+            margin: 15px 0;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+        }
+        th {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #888;
+        }
+        td {
+            background: rgba(255,255,255,0.05);
+        }
+        tr td:first-child { border-radius: 8px 0 0 8px; }
+        tr td:last-child { border-radius: 0 8px 8px 0; }
+        
+        /* Code Blocks */
+        code {
+            background: rgba(0,0,0,0.3);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 14px;
+        }
+        pre {
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        
+        /* Alerts */
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .alert.success { background: rgba(0,255,136,0.1); border-left: 4px solid #00ff88; }
+        .alert.warning { background: rgba(255,193,7,0.1); border-left: 4px solid #ffc107; }
+        .alert.info { background: rgba(0,212,255,0.1); border-left: 4px solid #00d4ff; }
+        
+        /* Quick Reference */
+        .quick-ref {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .quick-item {
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .quick-item .label { font-size: 12px; color: #888; margin-bottom: 5px; }
+        .quick-item .value { font-size: 20px; font-weight: bold; color: #00ff88; }
+        
+        /* File Tree */
+        .file-tree {
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 14px;
+        }
+        .folder { color: #ffd700; }
+        .file { color: #00d4ff; }
+        
+        /* Comparison */
+        .comparison {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        .comp-item {
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .comp-icon { font-size: 32px; margin-bottom: 10px; }
+        .comp-name { font-weight: bold; margin-bottom: 5px; }
+        .comp-desc { font-size: 13px; color: #888; }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .comparison { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>📈 Volatility Trading System</h1>
+            <p>Automated Multi-Strategy Trading Documentation</p>
+            <div class="version">Version 3.0 | Updated: 2026-02-12</div>
+        </div>
+        
+        <!-- Navigation -->
+        <div class="nav">
+            <a href="#overview">Overview</a>
+            <a href="#strategies">Strategies</a>
+            <a href="#logic">Trading Logic</a>
+            <a href="#risk">Risk Management</a>
+            <a href="#usage">Usage</a>
+            <a href="#quick">Quick Reference</a>
+        </div>
+        
+        <!-- Overview -->
+        <div class="section" id="overview">
+            <h2>System Overview</h2>
+            
+            <h3>Purpose</h3>
+            <p>Automated volatility-based trading system using Yahoo Finance data and IBKR paper account.</p>
+            
+            <div class="alert success">
+                <strong>Key Features:</strong>
+                <ul style="margin-top:10px;margin-left:20px;">
+                    <li>6 different volatility strategies with adaptive weights</li>
+                    <li>Real-time market scanning (268+ stocks)</li>
+                    <li>Auto-adjusting parameters based on market volatility</li>
+                    <li>Built-in risk management (stop-loss, take-profit)</li>
+                    <li>Telegram notifications for all trades</li>
+                </ul>
+            </div>
+            
+            <h3>File Structure</h3>
+            <div class="file-tree">
+                <span class="folder">📁 volatility_trading_system/</span><br>
+                &nbsp;&nbsp;<span class="file">📄 ibkr_trader_v3.py</span> - Main daily trading<br>
+                &nbsp;&nbsp;<span class="file">📄 multi_strategy_v2.py</span> - Multi-strategy analyzer<br>
+                &nbsp;&nbsp;<span class="file">📄 intraday_v2.py</span> - Adaptive intraday<br>
+                &nbsp;&nbsp;<span class="file">📄 realtime_trader.py</span> - Real-time scanner<br>
+                &nbsp;&nbsp;<span class="file">📄 mobile_report.py</span> - Report generation<br>
+                &nbsp;&nbsp;<span class="file">📄 trading_dashboard.py</span> - Web dashboard<br>
+                &nbsp;&nbsp;<span class="file">📁 📂 reports/</span> - HTML reports
+            </div>
+        </div>
+        
+        <!-- Strategies -->
+        <div class="section" id="strategies">
+            <h2>Strategy Components</h2>
+            
+            <!-- IV Rank -->
+            <div class="strategy-card highlight">
+                <div class="strategy-header">
+                    <span class="strategy-name">1. IV Rank Strategy (核心)</span>
+                    <span class="strategy-weight">Weight: 1.0</span>
+                </div>
+                <p><strong>Logic:</strong> Compare implied volatility (IV) against its historical range.</p>
+                <table>
+                    <thead>
+                        <tr><th>IV Rank</th><th>Signal</th><th>Action</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>> 65%</td><td>HIGH_IV</td><td>SELL options / SHORT stock</td></tr>
+                        <tr><td>< 35%</td><td>LOW_IV</td><td>BUY options / LONG stock</td></tr>
+                        <tr><td>35-65%</td><td>NEUTRAL</td><td>No position</td></tr>
+                    </tbody>
+                </table>
+                <p><strong>Example:</strong> AAPL IV Rank 30% → LONG_VOL signal</p>
+            </div>
+            
+            <!-- VIX Mean Reversion -->
+            <div class="strategy-card">
+                <div class="strategy-header">
+                    <span class="strategy-name">2. VIX Mean Reversion</span>
+                    <span class="strategy-weight">Weight: 0.8</span>
+                </div>
+                <p><strong>Logic:</strong> VIX tends to mean-revert. High VIX = oversold market, Low VIX = overbought.</p>
+                <table>
+                    <thead>
+                        <tr><th>Condition</th><th>Signal</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>VIX > 25 + Drop > 3%</td><td>LONG_VOL (dip buying)</td></tr>
+                        <tr><td>VIX < 15 + Rally > 3%</td><td>SHORT_VOL (fade rally)</td></tr>
+                        <tr><td>VIX > 22</td><td>SHORT_VOL (elevated fear)</td></tr>
+                        <tr><td>VIX < 14</td><td>LONG_VOL (complacency)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- IV/HV Spread -->
+            <div class="strategy-card">
+                <div class="strategy-header">
+                    <span class="strategy-name">3. IV/HV Spread</span>
+                    <span class="strategy-weight">Weight: 0.7</span>
+                </div>
+                <p><strong>Logic:</strong> Compare implied volatility vs historical volatility.</p>
+                <p><code>Spread = (IV - HV) / HV</code></p>
+                <table>
+                    <thead>
+                        <tr><th>Spread</th><th>Signal</th><th>Confidence</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>> 30%</td><td>SHORT_VOL</td><td>(Spread - 20%) capped at 80%</td></tr>
+                        <tr><td>< -20%</td><td>LONG_VOL</td><td>(-Spread × 50%) capped at 60%</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Momentum -->
+            <div class="strategy-card">
+                <div class="strategy-header">
+                    <span class="strategy-name">4. Momentum</span>
+                    <span class="strategy-weight">Weight: 0.6</span>
+                </div>
+                <p><strong>Logic:</strong> Trend following - buy winners, sell losers.</p>
+                <table>
+                    <thead>
+                        <tr><th>Condition</th><th>Signal</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>5-day rise > 3% + 20-day rise > 5% + IV < 50%</td><td>LONG_VOL</td></tr>
+                        <tr><td>5-day drop > 3% + 20-day drop > 5% + IV > 50%</td><td>SHORT_VOL</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Contrarian -->
+            <div class="strategy-card">
+                <div class="strategy-header">
+                    <span class="strategy-name">5. Contrarian</span>
+                    <span class="strategy-weight">Weight: 0.5</span>
+                </div>
+                <p><strong>Logic:</strong> Fade extreme moves - buy when everyone sells, sell when everyone buys.</p>
+                <table>
+                    <thead>
+                        <tr><th>Condition</th><th>Signal</th><th>Confidence</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Drop > 5% + IV > 70%</td><td>LONG_VOL</td><td>60%</td></tr>
+                        <tr><td>Rally > 5% + IV < 30%</td><td>SHORT_VOL</td><td>60%</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Trend Following -->
+            <div class="strategy-card">
+                <div class="strategy-header">
+                    <span class="strategy-name">6. Trend Following</span>
+                    <span class="strategy-weight">Weight: 0.5</span>
+                </div>
+                <p><strong>Logic:</strong> Follow clear price trends using SMA.</p>
+                <table>
+                    <thead>
+                        <tr><th>Condition</th><th>Signal</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Price > SMA20 > SMA50 + 5-day rise</td><td>LONG_VOL</td></tr>
+                        <tr><td>Price < SMA20 < SMA50 + 5-day drop</td><td>SHORT_VOL</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Trading Logic -->
+        <div class="section" id="logic">
+            <h2>Trading Logic</h2>
+            
+            <h3>Multi-Strategy Scoring System</h3>
+            <p>Each strategy votes with weighted confidence:</p>
+            <pre>Final_Score = Σ (Strategy_Confidence × Strategy_Weight)</pre>
+            
+            <h3>Decision Rules</h3>
+            <table>
+                <thead>
+                    <tr><th>Condition</th><th>Action</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>BUY_SCORE > SELL_SCORE × 1.2</td><td>LONG position</td></tr>
+                    <tr><td>SELL_SCORE > BUY_SCORE × 1.2</td><td>SHORT position</td></tr>
+                    <tr><td>Otherwise</td><td>No trade</td></tr>
+                </tbody>
+            </table>
+            
+            <h3>Example Calculation</h3>
+            <div class="alert info">
+                <strong>AAPL Analysis:</strong><br>
+                IV Rank Strategy: LONG 40% × 1.0 = 0.40<br>
+                Momentum: LONG 50% × 0.6 = 0.30<br>
+                Trend: LONG 50% × 0.5 = 0.25<br><br>
+                TOTAL: LONG = 0.95, SHORT = 0<br>
+                <strong>RESULT: LONG signal with 100% confidence</strong>
+            </div>
+            
+            <h3>Position Sizing</h3>
+            <pre>Position_Size = Account × 2% × Confidence
+Quantity = Position_Size / Stock_Price</pre>
+            
+            <h3>Example:</h3>
+            <div class="quick-ref">
+                <div class="quick-item">
+                    <div class="label">Account</div>
+                    <div class="value">$1,000,000</div>
+                </div>
+                <div class="quick-item">
+                    <div class="label">Confidence</div>
+                    <div class="value">70%</div>
+                </div>
+                <div class="quick-item">
+                    <div class="label">Position</div>
+                    <div class="value">$14,000</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Risk Management -->
+        <div class="section" id="risk">
+            <h2>Risk Management</h2>
+            
+            <h3>Stop-Loss Rules</h3>
+            <table>
+                <thead>
+                    <tr><th>Strategy</th><th>Stop-Loss</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Daily (Multi-Strategy)</td><td>-5%</td></tr>
+                    <tr><td>Intraday</td><td>-0.4% to -0.8% (adaptive)</td></tr>
+                    <tr><td>Time Stop</td><td>15-20 minutes</td></tr>
+                </tbody>
+            </table>
+            
+            <h3>Take-Profit Rules</h3>
+            <table>
+                <thead>
+                    <tr><th>Strategy</th><th>Take-Profit</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Daily (Multi-Strategy)</td><td>+8%</td></tr>
+                    <tr><td>Intraday</td><td>+0.6% to +1.2% (adaptive)</td></tr>
+                </tbody>
+            </table>
+            
+            <h3>Position Limits</h3>
+            <ul>
+                <li>Maximum 5 simultaneous positions per strategy</li>
+                <li>Maximum 10% of account per single position</li>
+                <li>Minimum 30-second cooldown between trades on same symbol</li>
+            </ul>
+            
+            <h3>Adaptive Thresholds (Intraday)</h3>
+            <table>
+                <thead>
+                    <tr><th>Market Volatility</th><th>Trigger Threshold</th><th>Stop-Loss</th><th>Take-Profit</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Low (<1.5%)</td><td>35%</td><td>0.3%</td><td>0.5%</td></tr>
+                    <tr><td>Normal (1.5-3%)</td><td>45%</td><td>0.5%</td><td>0.8%</td></tr>
+                    <tr><td>High (3-5%)</td><td>55%</td><td>0.8%</td><td>1.2%</td></tr>
+                    <tr><td>Extreme (>5%)</td><td>65%</td><td>1.2%</td><td>1.8%</td></tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Usage -->
+        <div class="section" id="usage">
+            <h2>Usage Guide</h2>
+            
+            <h3>Daily Trading (Main Session - 21:00 Paris)</h3>
+            <pre># Analyze only
+python volatility_trading_system/ibkr_trader_v3.py
+
+# Analyze + Execute trades
+python volatility_trading_system/ibkr_trader_v3.py --trade</pre>
+            
+            <h3>Intraday Trading (US Market Hours)</h3>
+            <p><strong>Market Hours:</strong></p>
+            <div class="quick-ref">
+                <div class="quick-item">
+                    <div class="label">New York</div>
+                    <div class="value">9:30 AM - 4:00 PM</div>
+                </div>
+                <div class="quick-item">
+                    <div class="label">Paris</div>
+                    <div class="value">3:30 PM - 10:00 PM</div>
+                </div>
+            </div>
+            <pre># Adaptive intraday (auto-threshold)
+python volatility_trading_system/intraday_v2.py
+
+# Real-time scanner (continuous)
+python volatility_trading_system/realtime_trader.py
+
+# Market hours auto-trader
+python volatility_trading_system/market_hours_trader.py --loop</pre>
+            
+            <h3>Monitoring</h3>
+            <pre># Web dashboard
+python volatility_trading_system/trading_dashboard.py 8080</pre>
+            
+            <h3>Telegram Notifications</h3>
+            <table>
+                <thead>
+                    <tr><th>Setting</th><th>Value</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Bot</td><td>@Lulg_trading_bot</td></tr>
+                    <tr><td>Token</td><td>8574660647:AAF74d8rgkcg...</td></tr>
+                    <tr><td>Chat ID</td><td>8402314009</td></tr>
+                </tbody>
+            </table>
+            
+            <h3>IBKR Integration</h3>
+            <table>
+                <thead>
+                    <tr><th>Parameter</th><th>Value</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Host</td><td>127.0.0.1</td></tr>
+                    <tr><td>Port</td><td>7497</td></tr>
+                    <tr><td>Client ID</td><td>1-3</td></tr>
+                    <tr><td>Account</td><td>Paper ($1,000,000)</td></tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Quick Reference -->
+        <div class="section" id="quick">
+            <h2>Quick Reference Card</h2>
+            
+            <h3>Signal Interpretation</h3>
+            <div class="alert info">
+                <strong>BUY/SHORT = Long/Short volatility</strong><br>
+                = Buy/Sell the underlying stock<br><br>
+                <strong>HIGH IV + LOW HV</strong> = Options expensive = Sell options<br>
+                <strong>LOW IV + HIGH HV</strong> = Options cheap = Buy options
+            </div>
+            
+            <h3>Market Conditions Guide</h3>
+            <div class="comparison">
+                <div class="comp-item">
+                    <div class="comp-icon">😱</div>
+                    <div class="comp-name">Panic Selling</div>
+                    <div class="comp-desc">High IV<br>Sell puts / Short</div>
+                </div>
+                <div class="comp-item">
+                    <div class="comp-icon">😊</div>
+                    <div class="comp-name">Complacent Rally</div>
+                    <div class="comp-desc">Low IV<br>Buy puts / Long</div>
+                </div>
+                <div class="comp-item">
+                    <div class="comp-icon">📊</div>
+                    <div class="comp-name">Normal Market</div>
+                    <div class="comp-desc">Medium IV<br>IV Rank strategy</div>
+                </div>
+            </div>
+            
+            <h3>Strategy Performance Summary</h3>
+            <table>
+                <thead>
+                    <tr><th>Strategy</th><th>Weight</th><th>Best For</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>IV Rank</td><td>1.0</td><td>Core strategy, always active</td></tr>
+                    <tr><td>VIX Reversion</td><td>0.8</td><td>Market regime changes</td></tr>
+                    <tr><td>IV/HV Spread</td><td>0.7</td><td>Options premium valuation</td></tr>
+                    <tr><td>Momentum</td><td>0.6</td><td>Trending markets</td></tr>
+                    <tr><td>Contrarian</td><td>0.5</td><td>Reversals at extremes</td></tr>
+                    <tr><td>Trend</td><td>0.5</td><td>Clear trends</td></tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <p>📈 Volatility Trading System | Version 3.0 | 2026-02-12</p>
+            <p>Automated trading with IBKR Paper Account</p>
+        </div>
+    </div>
+</body>
+</html>
